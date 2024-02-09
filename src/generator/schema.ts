@@ -191,19 +191,12 @@ export const getResponsesObject = (
   example: Record<string, any> | undefined,
   headers: Record<string, OpenAPIV3.HeaderObject | OpenAPIV3.ReferenceObject> | undefined
 ): OpenAPIV3.ResponsesObject => {
-  if (!instanceofZodType(schema)) {
-    throw new TRPCError({
-      message: 'Output parser expects a Zod validator',
-      code: 'INTERNAL_SERVER_ERROR',
-    });
-  }
-
   const successResponseObject: OpenAPIV3.ResponseObject = {
     description: 'Successful response',
     headers: headers,
     content: {
       'application/json': {
-        schema: zodSchemaToOpenApiSchemaObject(schema),
+        schema: instanceofZodType(schema) ? zodSchemaToOpenApiSchemaObject(schema) : {},
         example,
       },
     },
